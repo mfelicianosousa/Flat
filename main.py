@@ -1,5 +1,7 @@
 import flet as ft
 
+from components import ChatMessage, Message
+
 
 def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.DARK
@@ -23,9 +25,30 @@ def main(page: ft.Page):
             new_message.prefix = ft.Text(f"{join_user_name.value}:")
             # new_message.update()
             page.update() 
+            
+    def add_message_on_history(message: Message):
+        m = ChatMessage(message)
+        chat.controls.append(m)
+        page.update()
+
     def send_message_click(e):
-        pass
-     
+        if new_message.value != "":
+            user_message = new_message.value
+            
+            add_message_on_history( 
+                Message(
+                     user_name=page.session.get('user_name'),
+                     text=user_message,
+                     user_type="user"
+                )
+            )
+            
+            new_message.value = ""
+            page.update() 
+            
+            new_message.focus()
+            page.update()
+               
     app_bar = ft.AppBar(
         leading=ft.Icon(ft.Icons.ASSISTANT),
         leading_width=50,
